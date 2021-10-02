@@ -1,29 +1,51 @@
 extends Control
 
-func _ready():
-	var items = [
+const HSD_APP = [
+	["section", "Primary Attributes", [
 		["grid", {"columns": 2}, [
-			["label", {}, "Primary Attributes"], null,
 			["label", {}, "Strength:"],     ["input", {"id": "strength"},     "2"],
 			["label", {}, "Dexterity:"],    ["input", {"id": "dexterity"},    "3"],
 			["label", {}, "Intelligence:"], ["input", {"id": "intelligence"}, "4"],
 			["label", {}, "Endurance:"],    ["input", {"id": "endurance"},    "4"],
-		]],
+	]]]],
+	["section", "Secondary Attributes", [
 		["grid", {"columns": 2}, [
-			["label", {}, "Secondary Attributes"], null,
 			["label", {}, "Hit Points:"], ["input", {"id": "hit-points"}, "24"],
 			["label", {}, "Armor:"],      ["input", {"id": "armor"},      "6"],
 			["label", {}, "Movement:"],   ["input", {"id": "movement"},   "4"],
-		]]
-	]
-	
+	]]]]
+]
+
+const FUNC_MAP = {
+	"grid": "add_grid",
+	"input": "add_input",
+	"label": "add_label",
+	"section": "add_section",
+}
+
+func _ready():
+	build(HSD_APP)
+
+func build(items):
 	for item in items:
 		add($Container, item)
 
 func add(parent, item):
-	# FIXME: stop using funcref() in such an insecure way.
-	var fn = funcref(self, "add_" + item[0])
+	var fn = funcref(self, FUNC_MAP[item[0]])
 	fn.call_func(parent, item[1], item[2])
+
+func add_section(parent, title_text, items):
+	var section = load("res://Section.tscn").instance()
+	parent.add_child(section)
+	var vbox = section.get_node('MarginContainer/VBoxContainer')
+	var title = vbox.get_node('Title')
+	section.anchor_right = ANCHOR_END
+	section.anchor_bottom = ANCHOR_END
+	
+	title.text = title_text
+	
+	for idx in range(0, len(items)):
+		add(vbox, items[idx])
 
 func add_grid(parent, attrs, items):
 	var grid = GridContainer.new()
