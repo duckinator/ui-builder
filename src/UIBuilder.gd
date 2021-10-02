@@ -52,7 +52,6 @@ func _build(control_type: String, attrs: Dictionary = {}, children: Array = []):
 		control[attr] = attrs[attr]
 	
 	for child in children:
-		print("control = ", control.name, ", child =", child)
 		control.add_child(build(child))
 	
 	return control
