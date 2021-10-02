@@ -18,21 +18,24 @@ const HSD_APP = [
 
 const PARTS_HORSE_APP = ["Application", {}, [
 	["ScrollContainer", {}, [
-		["VBoxContainer", {}, [
-			["Section", {"title_text": "Component"}, [
-				["LabeledTextEdit", {"name": "name",      "label_text": "Name"}],
-				["LabeledTextEdit", {"name": "slug",      "label_text": "Slug"}],
-				["LabeledTextEdit", {"name": "summary",   "label_text": "Summary"}],
-				["LabeledTextEdit", {"name": "details",   "label_text": "Text"}],
-				["LabeledTextEdit", {"name": "datasheet", "label_text": "Datasheet URL"}],
-				["LabeledTextEdit", {"name": "details",   "label_text": "Details URL"}],
+		["HBoxContainer", {"name": "ComponentHBox"}, [
+			["Section", {"name": "Details", "title_text": "Details"}, [
+				["LabeledTextEdit", {"name": "name",          "label_text": "Name"}],
+				["LabeledTextEdit", {"name": "slug",          "label_text": "Slug"}],
+				["LabeledTextEdit", {"name": "summary",       "label_text": "Summary"}],
+				["LabeledTextEdit", {"name": "details",       "label_text": "Text"}],
+				["LabeledTextEdit", {"name": "datasheet_url", "label_text": "Datasheet URL"}],
+				["LabeledTextEdit", {"name": "details_url",   "label_text": "Details URL"}],
 				# Package Style
 				# Number of Pins
-				["LabeledTextEdit", {"name": "tags",      "label_text": "Tags (comma separated)"}],
-			]]
-		]]
-	]]
-]]
+				["LabeledTextEdit", {"name": "tags",          "label_text": "Tags (comma separated)"}],
+			]],
+			["Section", {"name": "Pins", "title_text": "Pinout"}, [
+				# ...
+			]] # Section
+		]] # HBoxContainer
+	]] # ScrollContainer
+]] # Application
 
 func _ready():
 	add_child(build(PARTS_HORSE_APP))
