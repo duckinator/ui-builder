@@ -16,63 +16,43 @@ const HSD_APP = [
 	]]]]
 ]
 
-const FUNC_MAP = {
-	"grid": "add_grid",
-	"input": "add_input",
-	"label": "add_label",
-	"section": "add_section",
-}
+const PARTS_HORSE_APP = ["Application", {}, [
+	["ScrollContainer", {}, [
+		["VBoxContainer", {}, [
+			["Section", {"title_text": "Component"}, [
+				["LabeledTextEdit", {"name": "name",      "label_text": "Name"}],
+				["LabeledTextEdit", {"name": "slug",      "label_text": "Slug"}],
+				["LabeledTextEdit", {"name": "summary",   "label_text": "Summary"}],
+				["LabeledTextEdit", {"name": "details",   "label_text": "Text"}],
+				["LabeledTextEdit", {"name": "datasheet", "label_text": "Datasheet URL"}],
+				["LabeledTextEdit", {"name": "details",   "label_text": "Details URL"}],
+				# Package Style
+				# Number of Pins
+				["LabeledTextEdit", {"name": "tags",      "label_text": "Tags (comma separated)"}],
+			]]
+		]]
+	]]
+]]
 
 func _ready():
-	build(HSD_APP)
+	add_child(build(PARTS_HORSE_APP))
 
-func build(items):
-	for item in items:
-		add($Container, item)
+func build(item: Array):
+	if len(item) == 1:
+		return _build(item[0])
+	elif len(item) == 2:
+		return _build(item[0], item[1])
+	else:
+		return _build(item[0], item[1], item[2])
 
-func add(parent, item):
-	var fn = funcref(self, FUNC_MAP[item[0]])
-	fn.call_func(parent, item[1], item[2])
-
-func add_section(parent, title_text, items):
-	var section = load("res://Section.tscn").instance()
-	parent.add_child(section)
-	var vbox = section.get_node('MarginContainer/VBoxContainer')
-	var title = vbox.get_node('Title')
-	section.anchor_right = ANCHOR_END
-	section.anchor_bottom = ANCHOR_END
+func _build(control_type: String, attrs: Dictionary = {}, children: Array = []):
+	var control = load("res://controls/" + control_type + ".tscn").instance()
 	
-	title.text = title_text
+	for attr in attrs:
+		control[attr] = attrs[attr]
 	
-	for idx in range(0, len(items)):
-		add(vbox, items[idx])
-
-func add_grid(parent, attrs, items):
-	var grid = GridContainer.new()
-	parent.add_child(grid)
-	grid.anchor_right = ANCHOR_END
-	grid.anchor_bottom = ANCHOR_END
+	for child in children:
+		print("control = ", control.name, ", child =", child)
+		control.add_child(build(child))
 	
-	if "columns" in attrs:
-		grid.columns = attrs["columns"]
-	
-	for idx in range(0, len(items)):
-		if items[idx] == null:
-			items[idx] = ["label", {}, ""]
-		add(grid, items[idx])
-
-func add_label(parent, attrs, text):
-	var label = Label.new()
-	label.text = text
-	parent.add_child(label)
-
-func add_input(parent, attrs, value):
-	var input = TextEdit.new()
-	input.text = value
-	input.name = attrs["id"]
-	input.rect_min_size = Vector2(100, 20)
-	parent.add_child(input)
-
-func add_table(parent, attrs, rows):
-	#add_grid(parent, attrs, items)
-	pass
+	return control

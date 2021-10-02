@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://controls/Section.gd" type="Script" id=1]
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://fonts/Hack-Bold.ttf"
@@ -8,6 +10,7 @@ font_data = SubResource( 1 )
 
 [node name="Section" type="PanelContainer"]
 anchor_bottom = 1.0
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -29,5 +32,5 @@ margin_right = 20.0
 margin_bottom = 566.0
 
 [node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
-margin_bottom = 2.0
+margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
